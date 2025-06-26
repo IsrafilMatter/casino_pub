@@ -189,6 +189,41 @@ class CardEncoder(json.JSONEncoder):
         if isinstance(obj, Card):
             return {'suit': obj.suit, 'value': obj.value, 'numeric_value': obj.numeric_value}
         return super().default(obj)
+class Card:
+    def __init__(self, suit: str, value: str, numeric_value: int):
+        self.suit = suit.lower()
+        self.value = value
+        self.numeric_value = numeric_value
+        self.image = None
+        self._load_image()
 
+    def _load_image(self):
+        value_map = {'A': 'ace', 'K': 'king', 'Q': 'queen', 'J': 'jack'}
+        value_str = value_map.get(self.value, self.value)
+        filename = f"{value_str}_of_{self.suit}.png"
+        image_path = os.path.join(ASSETS_DIR, "cards", filename)
+        
+        try:
+            self.image = pygame.image.load(image_path)
+            self.image = pygame.transform.scale(self.image, (CARD_WIDTH, CARD_HEIGHT))
+        except pygame.error:
+            print(f"Error loading card image: {image_path}")
+            self.image = pygame.Surface((CARD_WIDTH, CARD_HEIGHT))
+            self.image.fill(WHITE)
+            font = pygame.font.Font(None, 36)
+            text = font.render(f"{self.value}{self.suit[0]}", True, BLACK)
+            self.image.blit(text, (10, 10))
+
+    def to_dict(self):
+        return {
+            'suit': self.suit,
+            'value': self.value,
+            'numeric_value': self.numeric_value
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(data['suit'], data['value'], data['numeric_value'])
+    
 # Defining BaccaratGame class inheriting from CasinoGame
 # Main entry
