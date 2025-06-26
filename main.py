@@ -8,6 +8,7 @@ import os
 game_classes = {
     'Baccarat': BaccaratGame,
     'Color Game': ColorGame,
+    'Mines': MinesGame
 }
 
 class CasinoApp:
