@@ -14,6 +14,15 @@ import os
 from casino_game import CasinoGame
 
 # Inherit from CasinoGame class
+class ColorGame(CasinoGame):
+    @property
+    def balance(self):
+        return self._player_account_balance
+
+    @balance.setter
+    def balance(self, value):
+        self._player_account_balance = value
+
 # Initialization
 # GUI Setup
 # Betting Logic
