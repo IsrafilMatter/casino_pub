@@ -2,7 +2,6 @@
 # Israfil Palabay
 # 2025-06-24
 
-# Import necessary libraries for graphics, sound, system, data, and game logic
 import pygame
 import random
 import sys
@@ -13,13 +12,13 @@ import webbrowser
 from typing import List, Tuple, Dict, Optional
 from casino_game import CasinoGame
 
-# Initialization
+# Initialize Pygame
 pygame.init()
 
-# Initialize the Pygame mixer for sound effects
+# Initialize pygame mixer
 pygame.mixer.init()
 
-# Set up the main window size and card sizes
+# Constants
 WINDOW_WIDTH = 1200
 WINDOW_HEIGHT = 800
 CARD_WIDTH = 100
@@ -33,7 +32,7 @@ BUTTON_HEIGHT = 40
 ASSETS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets")
 SAVES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "saves")
 
-# Create directories if they do not exist
+# Create directories if they don't exist
 os.makedirs(ASSETS_DIR, exist_ok=True)
 os.makedirs(SAVES_DIR, exist_ok=True)
 
@@ -55,15 +54,14 @@ BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
 DARK_GREEN = (0, 100, 0)
 
-# Game states
-MENU = "menu"
-PLAYING = "playing"
-PAUSED = "paused"
-BETTING = "betting"
-SAVE_MENU = "save_menu"
-LOAD_MENU = "load_menu"
+# Game States
+MENU = 'menu'
+PLAYING = 'playing'
+PAUSED = 'paused'
+BETTING = 'betting'
+SAVE_MENU = 'save_menu'
+LOAD_MENU = 'load_menu'
 
-# GUI Setup 
 class Button:
     def __init__(self, x: int, y: int, width: int, height: int, text: str, color: Tuple[int, int, int]):
         self.rect = pygame.Rect(x, y, width, height)
@@ -83,7 +81,8 @@ class Button:
             if self.rect.collidepoint(event.pos) and self.active:
                 return True
         return False
-class BetbButton:
+
+class BetButton:
     def __init__(self, x: int, y: int, width: int, height: int, amount: int):
         self.rect = pygame.Rect(x, y, width, height)
         self.amount = amount
@@ -102,6 +101,7 @@ class BetbButton:
             if self.rect.collidepoint(event.pos) and self.active:
                 return True
         return False
+
 class Confetti:
     def __init__(self, x, y):
         self.x = x
@@ -125,6 +125,7 @@ class Confetti:
         rotated_surface = pygame.transform.rotate(surface, self.angle)
         screen.blit(rotated_surface, (self.x - rotated_surface.get_width()//2, 
                                     self.y - rotated_surface.get_height()//2))
+
 class Menu:
     def __init__(self, width: int, height: int):
         self.width = width
@@ -184,11 +185,13 @@ class Menu:
             self.buttons['load2'].draw(screen)
             self.buttons['load3'].draw(screen)
             self.buttons['back'].draw(screen)
+
 class CardEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Card):
             return {'suit': obj.suit, 'value': obj.value, 'numeric_value': obj.numeric_value}
         return super().default(obj)
+
 class Card:
     def __init__(self, suit: str, value: str, numeric_value: int):
         self.suit = suit.lower()
@@ -224,7 +227,7 @@ class Card:
     @classmethod
     def from_dict(cls, data):
         return cls(data['suit'], data['value'], data['numeric_value'])
-    
+
 class BaccaratGame(CasinoGame):
     @property
     def balance(self):

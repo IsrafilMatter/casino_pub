@@ -4,8 +4,9 @@ import json
 import os
 
 game_classes = {
-    'baccarat': BaccaratGame
+    'Baccarat': BaccaratGame,
 }
+
 class CasinoApp:
     def __init__(self):
         self.root = tk.Tk()
