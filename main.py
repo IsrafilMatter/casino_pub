@@ -1,4 +1,5 @@
 import tkinter as tk
+from PIL import Image, ImageTk
 from baccarat_game.baccarat_game import BaccaratGame
 from color_game.color_game import ColorGame
 from mines_game.mines_game import MinesGame
@@ -7,40 +8,68 @@ import os
 
 game_classes = {
     'Baccarat': BaccaratGame,
-    'Color Game': ColorGame,
-    'Mines': MinesGame
+    'Mines': MinesGame,
+    'Color Game': ColorGame
+}
+
+game_images = {
+    'Baccarat': 'baccarat_game/assets/BaccaratTable.jpg',
+    'Mines': 'baccarat_game/assets/pokerchip1.png',
+    'Color Game': 'baccarat_game/assets/pokerchip3.png'
 }
 
 class CasinoApp:
     def __init__(self):
         self.root = tk.Tk()
         self.root.title("Casino App")
-        self.root.geometry("400x400")
-        self.selected_game = tk.StringVar(value='Baccarat')
+        self.root.configure(bg="#181c23")
+        self.root.geometry("600x400")
+        self.root.minsize(400, 300)
+        self.selected_game = None
         self.shared_balance = self.load_shared_balance()
         self.setup_ui()
 
     def setup_ui(self):
-        label = tk.Label(self.root, text="Welcome to the Casino!", font=("Arial", 18, "bold"))
-        label.pack(pady=20)
+        for widget in self.root.winfo_children():
+            widget.destroy()
+        # Top Navigation Bar
+        nav = tk.Frame(self.root, bg="#23273a", height=50)
+        nav.pack(fill=tk.X, side=tk.TOP)
+        tk.Label(nav, text="🎮 Lobby", fg="#fff", bg="#23273a", font=("Arial", 14, "bold")).pack(side=tk.LEFT, padx=20)
 
-        # Balance display
-        balance_label = tk.Label(self.root, text=f"Current Balance: ${self.shared_balance:,.2f}", font=("Arial", 14))
-        balance_label.pack(pady=10)
+        # Recent Section
+        recent = tk.Frame(self.root, bg="#181c23")
+        recent.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        tk.Label(recent, text="🎮 Recent", fg="#fff", bg="#181c23", font=("Arial", 12, "bold")).pack(anchor="w", pady=(0, 10))
 
-        # Game selection
+        # Game Cards
+        cards = tk.Frame(recent, bg="#181c23")
+        cards.pack()
         for game_name in game_classes:
-            rb = tk.Radiobutton(self.root, text=game_name, variable=self.selected_game, value=game_name, font=("Arial", 14))
-            rb.pack(anchor=tk.W, padx=40)
+            self.add_game_card(cards, game_name, game_images[game_name])
 
-        start_button = tk.Button(self.root, text="Start Game", font=("Arial", 14, "bold"), command=self.launch_game)
-        start_button.pack(pady=30)
+        # Balance display at the bottom
+        balance_label = tk.Label(self.root, text=f"Current Balance: ${self.shared_balance:,.2f}", font=("Arial", 14), fg="#ffd700", bg="#181c23")
+        balance_label.pack(side=tk.BOTTOM, pady=10)
 
-        rules_button = tk.Button(self.root, text="Show Rules", font=("Arial", 12), command=self.show_rules)
-        rules_button.pack()
+    def add_game_card(self, parent, name, img_path):
+        card = tk.Frame(parent, bg="#23273a", bd=0, relief=tk.RIDGE, cursor="hand2")
+        card.pack(side=tk.LEFT, padx=10)
+        try:
+            from PIL import Image, ImageTk
+            img = Image.open(img_path).resize((80, 80))
+            photo = ImageTk.PhotoImage(img)
+            label_img = tk.Label(card, image=photo, bg="#23273a")
+            label_img.image = photo
+            label_img.pack()
+        except Exception:
+            tk.Label(card, text="No Img", bg="#23273a", fg="#fff").pack()
+        tk.Label(card, text=name.upper(), fg="#fff", bg="#23273a", font=("Arial", 10, "bold")).pack(pady=5)
+        card.bind("<Button-1>", lambda e, g=name: self.launch_game(g))
+        for child in card.winfo_children():
+            child.bind("<Button-1>", lambda e, g=name: self.launch_game(g))
 
-    def launch_game(self):
-        game_name = self.selected_game.get()
+    def launch_game(self, game_name):
         game_class = game_classes[game_name]
         self.root.withdraw()  # Hide main menu instead of destroying
         game_instance = game_class(self.shared_balance)
@@ -50,12 +79,6 @@ class CasinoApp:
         self.save_shared_balance()
         self.root.deiconify()  # Show main menu again
         self.setup_ui()  # Refresh UI to show updated balance
-
-    def show_rules(self):
-        game_name = self.selected_game.get()
-        game_class = game_classes[game_name]
-        game_instance = game_class(self.shared_balance)
-        game_instance.show_rules()
 
     def load_shared_balance(self):
         try:
