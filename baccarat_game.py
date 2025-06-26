@@ -83,7 +83,6 @@ class Button:
             if self.rect.collidepoint(event.pos) and self.active:
                 return True
         return False
-
 class BetbButton:
     def __init__(self, x: int, y: int, width: int, height: int, amount: int):
         self.rect = pygame.Rect(x, y, width, height)
@@ -103,5 +102,88 @@ class BetbButton:
             if self.rect.collidepoint(event.pos) and self.active:
                 return True
         return False
+class Confetti:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.color = random.choice([(255,0,0), (0,255,0), (0,0,255), (255,255,0), (255,0,255), (0,255,255)])
+        self.size = random.randint(5, 10)
+        self.speed_y = random.randint(2, 6)
+        self.speed_x = random.randint(-3, 3)
+        self.angle = random.randint(0, 360)
+        self.angle_speed = random.randint(-5, 5)
+
+    def update(self):
+        self.y += self.speed_y
+        self.x += self.speed_x
+        self.angle += self.angle_speed
+        return self.y < WINDOW_HEIGHT
+
+    def draw(self, screen):
+        surface = pygame.Surface((self.size, self.size))
+        surface.fill(self.color)
+        rotated_surface = pygame.transform.rotate(surface, self.angle)
+        screen.blit(rotated_surface, (self.x - rotated_surface.get_width()//2, 
+                                    self.y - rotated_surface.get_height()//2))
+class Menu:
+    def __init__(self, width: int, height: int):
+        self.width = width
+        self.height = height
+        self.buttons = {
+            'start': Button(width//2 - 100, height//2 - 60, 200, 50, "Start Game", GREEN),
+            'continue': Button(width//2 - 100, height//2 - 60, 200, 50, "Continue", GREEN),
+            'exit': Button(width//2 - 100, height//2 + 70, 200, 50, "Exit", RED),
+            'save': Button(width//2 - 100, height//2 - 130, 200, 50, "Save Game", GOLD),
+            'load': Button(width//2 - 100, height//2 + 10, 200, 50, "Load Game", GOLD),
+            'save1': Button(width//2 - 100, height//2 - 130, 200, 50, "Save Game 1", GOLD),
+            'save2': Button(width//2 - 100, height//2 - 70, 200, 50, "Save Game 2", GOLD),
+            'save3': Button(width//2 - 100, height//2 - 10, 200, 50, "Save Game 3", GOLD),
+            'load1': Button(width//2 - 100, height//2 - 130, 200, 50, "Load Game 1", GOLD),
+            'load2': Button(width//2 - 100, height//2 - 70, 200, 50, "Load Game 2", GOLD),
+            'load3': Button(width//2 - 100, height//2 - 10, 200, 50, "Load Game 3", GOLD),
+            'back': Button(width//2 - 100, height//2 + 70, 200, 50, "Back", GRAY),
+            'main_menu': Button(width//2 - 100, height//2 + 70, 200, 50, "Main Menu", GRAY)
+        }
+
+    def draw(self, screen, state):
+        # Draw semi-transparent background
+        overlay = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+        pygame.draw.rect(overlay, (*BLACK[:3], 128), (0, 0, self.width, self.height))
+        screen.blit(overlay, (0, 0))
+
+        # Draw title
+        font = pygame.font.Font(None, 74)
+        titles = {
+            MENU: "Baccarat Casino",
+            PAUSED: "Game Paused",
+            SAVE_MENU: "Save Game",
+            LOAD_MENU: "Load Game"
+        }
+        title = titles.get(state, "Baccarat Casino")
+        title_surface = font.render(title, True, WHITE)
+        screen.blit(title_surface, (self.width//2 - title_surface.get_width()//2, 100))
+
+        # Draw buttons based on state
+        if state == MENU:
+            self.buttons['start'].draw(screen)
+            self.buttons['load'].draw(screen)
+            self.buttons['exit'].draw(screen)
+        elif state == PAUSED:
+            self.buttons['continue'].draw(screen)
+            self.buttons['save'].draw(screen)
+            self.buttons['load'].draw(screen)
+            self.buttons['exit'].draw(screen)
+            self.buttons['main_menu'].draw(screen)
+        elif state == SAVE_MENU:
+            self.buttons['save1'].draw(screen)
+            self.buttons['save2'].draw(screen)
+            self.buttons['save3'].draw(screen)
+            self.buttons['back'].draw(screen)
+        elif state == LOAD_MENU:
+            self.buttons['load1'].draw(screen)
+            self.buttons['load2'].draw(screen)
+            self.buttons['load3'].draw(screen)
+            self.buttons['back'].draw(screen)
+
 # Defining BaccaratGame class inheriting from CasinoGame
 # Main entry
