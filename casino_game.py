@@ -1,6 +1,6 @@
-from abc import ABC, abstractmethod
+from abc import ABC as AbstractBaseCasinoGame, abstractmethod
 
-class CasinoGame(ABC):
+class CasinoGame(AbstractBaseCasinoGame):
     def __init__(self, player_account_balance):
         self._player_account_balance = player_account_balance
 
