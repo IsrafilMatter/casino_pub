@@ -3,11 +3,10 @@ from baccarat_game.baccarat_game import BaccaratGame
 import json
 import os
 
-game_class = {
+game_classes = {
     'baccarat': BaccaratGame
 }
-
-class CasinoGameApp:
+class CasinoApp:
     def __init__(self):
         self.root = tk.Tk()
         self.root.title("Casino App")
