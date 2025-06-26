@@ -63,6 +63,36 @@ class ColorGame(CasinoGame):
         } 
 
 # GUI Setup
+    def setup_gui(self):
+        # Main container
+        main_frame = tk.Frame(self.root, bg="#7f1d1d")
+        main_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        
+        # Header
+        self.setup_header(main_frame)
+        
+        # Game area
+        game_frame = tk.Frame(main_frame, bg="#7f1d1d")
+        game_frame.pack(fill=tk.BOTH, expand=True, pady=10)
+        
+        # Left side - Dice and betting
+        left_frame = tk.Frame(game_frame, bg="#7f1d1d")
+        left_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=(0, 10))
+        
+        # Right side - Stats
+        right_frame = tk.Frame(game_frame, bg="#374151", relief=tk.RAISED, bd=2)
+        right_frame.pack(side=tk.RIGHT, fill=tk.Y, padx=(10, 0))
+        
+        # Setup sections
+        self.setup_dice_area(left_frame)
+        self.setup_betting_area(left_frame)
+        self.setup_controls(left_frame)
+        self.setup_stats(right_frame)
+        self.setup_history(left_frame)
+        
+        # Update display
+        self.update_display()
+
 # Betting Logic
 # Game Logic
 # Winning Calculation
