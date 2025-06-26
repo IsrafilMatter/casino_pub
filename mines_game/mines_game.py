@@ -242,7 +242,7 @@ class MinesGame(CasinoGame):
         
         # Instructions
         instructions = [
-            "1. Set your bet amount and number of mines",
+            "1. Set your bet amount",
             "2. Click tiles or use Auto Pick to reveal gems",
             "3. Each safe tile increases your multiplier",
             "4. Cash out anytime to secure winnings",
