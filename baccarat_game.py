@@ -16,6 +16,9 @@ from casino_game import CasinoGame
 # Initialization
 pygame.init()
 
+# Initialize the Pygame mixer for sound effects
+pygame.mixer.init()
+
 # Set up the main window size and card sizes
 WINDOW_WIDTH = 1200
 WINDOW_HEIGHT = 800
@@ -36,6 +39,9 @@ os.makedirs(SAVES_DIR, exist_ok=True)
 
 # Save file paths
 SAVE_FILES = [os.path.join(SAVES_DIR, f"save{i}.json") for i in range(1, 4)]
+
+# Betting amounts
+BET_AMOUNTS = [5, 10, 20, 40, 50, 80, 100, 200, 300, 500, 1000, 5000, 10000]
 
 # Colors
 BLACK = (0, 0, 0)
