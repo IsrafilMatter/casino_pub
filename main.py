@@ -1,6 +1,7 @@
 import tkinter as tk
 from baccarat_game.baccarat_game import BaccaratGame
 from color_game.color_game import ColorGame
+from mines_game.mines_game import MinesGame
 import json
 import os
 
