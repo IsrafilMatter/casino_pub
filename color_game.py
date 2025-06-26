@@ -61,7 +61,16 @@ class ColorGame(CasinoGame):
             "white": "WHITE",
             "pink": "PINK"
         } 
-
+        
+        # Load saved data
+        self.load_game_data()
+        
+        # Setup GUI
+        self.setup_gui()
+        
+        # Start the application
+        self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
+        
 # GUI Setup
     def setup_gui(self):
         # Main container
@@ -93,6 +102,74 @@ class ColorGame(CasinoGame):
         # Update display
         self.update_display()
 
+    def setup_header(self, parent):
+        header_frame = tk.Frame(parent, bg="#7f1d1d")
+        header_frame.pack(fill=tk.X, pady=(0, 20))
+        
+        # Title
+        title_label = tk.Label(
+            header_frame,
+            text="PERYA COLOR GAME",
+            font=("Arial", 24, "bold"),
+            fg="#fbbf24",
+            bg="#7f1d1d"
+        )
+        title_label.pack()
+        
+        # Game number
+        self.game_number_label = tk.Label(
+            header_frame,
+            text=f"Game #{self.game_number}",
+            font=("Arial", 14),
+            fg="#fde047",
+            bg="#7f1d1d"
+        )
+        self.game_number_label.pack(pady=5)
+        
+        # Stats row
+        stats_frame = tk.Frame(header_frame, bg="#7f1d1d")
+        stats_frame.pack(pady=10)
+        
+        # Balance
+        self.balance_label = tk.Label(
+            stats_frame,
+            text=f"Balance: ${self.balance:,}",
+            font=("Arial", 12, "bold"),
+            fg="white",
+            bg="#15803d",
+            padx=15,
+            pady=8,
+            relief=tk.RAISED,
+            bd=2
+        )
+        self.balance_label.pack(side=tk.LEFT, padx=5)
+        
+        # Total bet
+        self.total_bet_label = tk.Label(
+            stats_frame,
+            text="Total Bet: $0",
+            font=("Arial", 12, "bold"),
+            fg="white",
+            bg="#1d4ed8",
+            padx=15,
+            pady=8,
+            relief=tk.RAISED,
+            bd=2
+        )
+        self.total_bet_label.pack(side=tk.LEFT, padx=5)
+        
+        # Winnings
+        self.winnings_label = tk.Label(
+            stats_frame,
+            text="",
+            font=("Arial", 12, "bold"),
+            fg="black",
+            bg="#eab308",
+            padx=15,
+            pady=8,
+            relief=tk.RAISED,
+            bd=2
+        )
 # Betting Logic
 # Game Logic
 # Winning Calculation
