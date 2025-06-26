@@ -37,6 +37,14 @@ os.makedirs(SAVES_DIR, exist_ok=True)
 # Save file paths
 SAVE_FILES = [os.path.join(SAVES_DIR, f"save{i}.json") for i in range(1, 4)]
 
+# Game states
+MENU = "menu"
+PLAYING = "playing"
+PAUSED = "paused"
+BETTING = "betting"
+SAVE_MENU = "save_menu"
+LOAD_MENU = "load_menu"
+
 
 # colors, and betting amounts
 # Set up file directories for assets and data
