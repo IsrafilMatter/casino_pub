@@ -63,9 +63,45 @@ BETTING = "betting"
 SAVE_MENU = "save_menu"
 LOAD_MENU = "load_menu"
 
-
-# colors, and betting amounts
-# Set up file directories for assets and data
 # GUI Setup 
+class Button:
+    def __init__(self, x: int, y: int, width: int, height: int, text: str, color: Tuple[int, int, int]):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.text = text
+        self.color = color
+        self.active = True
+
+    def draw(self, surface):
+        pygame.draw.rect(surface, self.color if self.active else GRAY, self.rect)
+        font = pygame.font.Font(None, 24)
+        text_surface = font.render(self.text, True, WHITE)
+        text_rect = text_surface.get_rect(center=self.rect.center)
+        surface.blit(text_surface, text_rect)
+
+    def handle_event(self, event) -> bool:
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if self.rect.collidepoint(event.pos) and self.active:
+                return True
+        return False
+
+class BetbButton:
+    def __init__(self, x: int, y: int, width: int, height: int, amount: int):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.amount = amount
+        self.color = GOLD
+        self.active = True
+
+    def draw(self, surface):
+        pygame.draw.rect(surface, self.color if self.active else GRAY, self.rect)
+        font = pygame.font.Font(None, 24)
+        text_surface = font.render(f"${self.amount}", True, WHITE)
+        text_rect = text_surface.get_rect(center=self.rect.center)
+        surface.blit(text_surface, text_rect)
+
+    def handle_event(self, event) -> bool:
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if self.rect.collidepoint(event.pos) and self.active:
+                return True
+        return False
 # Defining BaccaratGame class inheriting from CasinoGame
 # Main entry
