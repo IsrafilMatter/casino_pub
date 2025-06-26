@@ -37,6 +37,18 @@ os.makedirs(SAVES_DIR, exist_ok=True)
 # Save file paths
 SAVE_FILES = [os.path.join(SAVES_DIR, f"save{i}.json") for i in range(1, 4)]
 
+# Colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+GREEN = (0, 128, 0)
+RED = (255, 0, 0)
+GOLD = (212, 175, 55)
+GRAY = (128, 128, 128)
+TRANSPARENT = (0, 0, 0, 128)
+BLUE = (0, 0, 255)
+YELLOW = (255, 255, 0)
+DARK_GREEN = (0, 100, 0)
+
 # Game states
 MENU = "menu"
 PLAYING = "playing"
