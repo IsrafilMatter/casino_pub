@@ -170,7 +170,52 @@ class ColorGame(CasinoGame):
             relief=tk.RAISED,
             bd=2
         )
-# Betting Logic
+        
+    def setup_dice_area(self, parent):
+        dice_frame = tk.LabelFrame(
+            parent,
+            text="DICE AREA",
+            font=("Arial", 16, "bold"),
+            fg="#fbbf24",
+            bg="#92400e",
+            relief=tk.RAISED,
+            bd=3
+        )
+        dice_frame.pack(fill=tk.X, pady=10)
+        
+        # Dice container
+        dice_container = tk.Frame(dice_frame, bg="#92400e")
+        dice_container.pack(pady=20)
+        
+        self.dice_labels = []
+        for i in range(3):
+            dice_label = tk.Label(
+                dice_container,
+                text=self.color_names[self.dice[i]],
+                font=("Arial", 14, "bold"),
+                width=8,
+                height=3,
+                relief=tk.RAISED,
+                bd=3
+            )
+            dice_label.pack(side=tk.LEFT, padx=10)
+            self.dice_labels.append(dice_label)
+            
+        # Roll button
+        self.roll_button = tk.Button(
+            dice_frame,
+            text="ROLL DICE",
+            font=("Arial", 16, "bold"),
+            bg="#dc2626",
+            fg="white",
+            padx=30,
+            pady=10,
+            relief=tk.RAISED,
+            bd=3,
+            command=self.roll_dice
+        )
+        self.roll_button.pack(pady=20)
+        
 # Game Logic
 # Winning Calculation
 # Game state updates
