@@ -3,19 +3,24 @@ from PIL import Image, ImageTk
 from baccarat_game.baccarat_game import BaccaratGame
 from color_game.color_game import ColorGame
 from mines_game.mines_game import MinesGame
+from slots_game.slots_game import SlotsGame
 import json
 import os
+import threading
+import pygame
 
 game_classes = {
     'Baccarat': BaccaratGame,
     'Mines': MinesGame,
-    'Color Game': ColorGame
+    'Color Game': ColorGame,
+    'Slots': SlotsGame
 }
 
 game_images = {
     'Baccarat': 'baccarat_game/assets/BaccaratTable.jpg',
     'Mines': 'baccarat_game/assets/pokerchip1.png',
-    'Color Game': 'baccarat_game/assets/pokerchip3.png'
+    'Color Game': 'baccarat_game/assets/pokerchip3.png',
+    'Slots': None  # Use emoji or placeholder for now
 }
 
 class CasinoApp:
@@ -27,7 +32,11 @@ class CasinoApp:
         self.root.minsize(400, 300)
         self.selected_game = None
         self.shared_balance = self.load_shared_balance()
+        self.music_thread = None
+        self.music_playing = False
         self.setup_ui()
+        self.start_background_music()
+        self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     def setup_ui(self):
         for widget in self.root.winfo_children():
@@ -46,7 +55,11 @@ class CasinoApp:
         cards = tk.Frame(recent, bg="#181c23")
         cards.pack()
         for game_name in game_classes:
-            self.add_game_card(cards, game_name, game_images[game_name])
+            img_path = game_images[game_name]
+            if img_path:
+                self.add_game_card(cards, game_name, img_path)
+            else:
+                self.add_game_card(cards, game_name, None)
 
         # Balance display at the bottom
         balance_label = tk.Label(self.root, text=f"Current Balance: ${self.shared_balance:,.2f}", font=("Arial", 14), fg="#ffd700", bg="#181c23")
@@ -55,15 +68,20 @@ class CasinoApp:
     def add_game_card(self, parent, name, img_path):
         card = tk.Frame(parent, bg="#23273a", bd=0, relief=tk.RIDGE, cursor="hand2")
         card.pack(side=tk.LEFT, padx=10)
-        try:
-            from PIL import Image, ImageTk
-            img = Image.open(img_path).resize((80, 80))
-            photo = ImageTk.PhotoImage(img)
-            label_img = tk.Label(card, image=photo, bg="#23273a")
-            label_img.image = photo
-            label_img.pack()
-        except Exception:
-            tk.Label(card, text="No Img", bg="#23273a", fg="#fff").pack()
+        if img_path:
+            try:
+                from PIL import Image, ImageTk
+                img = Image.open(img_path).resize((80, 80))
+                photo = ImageTk.PhotoImage(img)
+                label_img = tk.Label(card, image=photo, bg="#23273a")
+                label_img.image = photo
+                label_img.pack()
+            except Exception:
+                tk.Label(card, text="No Img", bg="#23273a", fg="#fff").pack()
+        else:
+            # Use emoji for Slots
+            emoji = "🎰" if name == "Slots" else "❓"
+            tk.Label(card, text=emoji, font=("Arial", 36), bg="#23273a", fg="#ffd700").pack()
         tk.Label(card, text=name.upper(), fg="#fff", bg="#23273a", font=("Arial", 10, "bold")).pack(pady=5)
         card.bind("<Button-1>", lambda e, g=name: self.launch_game(g))
         for child in card.winfo_children():
@@ -96,6 +114,38 @@ class CasinoApp:
                 json.dump({'balance': self.shared_balance}, f)
         except Exception as e:
             print(f"Error saving balance: {e}")
+
+    def start_background_music(self):
+        def play_music():
+            try:
+                pygame.mixer.init()
+                pygame.mixer.music.load('baccarat_game/assets/Las Vegas Casino Music.mp3')
+                pygame.mixer.music.play(-1)
+                self.music_playing = True
+            except Exception as e:
+                print(f"Error playing music: {e}")
+        if not pygame.mixer.get_init():
+            self.music_thread = threading.Thread(target=play_music, daemon=True)
+            self.music_thread.start()
+        else:
+            try:
+                pygame.mixer.music.load('baccarat_game/assets/Las Vegas Casino Music.mp3')
+                pygame.mixer.music.play(-1)
+                self.music_playing = True
+            except Exception as e:
+                print(f"Error playing music: {e}")
+
+    def stop_background_music(self):
+        try:
+            if pygame.mixer.get_init() and self.music_playing:
+                pygame.mixer.music.stop()
+                self.music_playing = False
+        except Exception as e:
+            print(f"Error stopping music: {e}")
+
+    def on_closing(self):
+        self.stop_background_music()
+        self.root.destroy()
 
 if __name__ == "__main__":
     app = CasinoApp()
