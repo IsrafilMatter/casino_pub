@@ -4,6 +4,8 @@ from baccarat_game.baccarat_game import BaccaratGame
 from color_game.color_game import ColorGame
 from mines_game.mines_game import MinesGame
 from slots_game.slots_game import SlotsGame
+from dice_game.dice_game import DiceGame
+from crash_game.crash_game import CrashGame
 import json
 import os
 import threading
@@ -13,14 +15,18 @@ game_classes = {
     'Baccarat': BaccaratGame,
     'Mines': MinesGame,
     'Color Game': ColorGame,
-    'Slots': SlotsGame
+    'Slots': SlotsGame,
+    'Dice': DiceGame,
+    'Crash': CrashGame
 }
 
 game_images = {
     'Baccarat': 'baccarat_game/assets/BaccaratTable.jpg',
     'Mines': 'baccarat_game/assets/pokerchip1.png',
     'Color Game': 'baccarat_game/assets/pokerchip3.png',
-    'Slots': None  # Use emoji or placeholder for now
+    'Slots': None,  # Use emoji or placeholder
+    'Dice': None,   # Use emoji or placeholder
+    'Crash': None   # Use emoji or placeholder
 }
 
 class CasinoApp:
@@ -79,8 +85,8 @@ class CasinoApp:
             except Exception:
                 tk.Label(card, text="No Img", bg="#23273a", fg="#fff").pack()
         else:
-            # Use emoji for Slots
-            emoji = "🎰" if name == "Slots" else "❓"
+            # Use emoji for special games
+            emoji = "🎰" if name == "Slots" else ("🎲" if name == "Dice" else ("🚀" if name == "Crash" else "❓"))
             tk.Label(card, text=emoji, font=("Arial", 36), bg="#23273a", fg="#ffd700").pack()
         tk.Label(card, text=name.upper(), fg="#fff", bg="#23273a", font=("Arial", 10, "bold")).pack(pady=5)
         card.bind("<Button-1>", lambda e, g=name: self.launch_game(g))
