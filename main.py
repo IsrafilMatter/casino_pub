@@ -1,10 +1,12 @@
 import tkinter as tk
 from baccarat_game.baccarat_game import BaccaratGame
+from color_game.color_game import ColorGame
 import json
 import os
 
 game_classes = {
     'Baccarat': BaccaratGame,
+    'Color Game': ColorGame,
 }
 
 class CasinoApp:
