@@ -184,6 +184,11 @@ class Menu:
             self.buttons['load2'].draw(screen)
             self.buttons['load3'].draw(screen)
             self.buttons['back'].draw(screen)
+class CardEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Card):
+            return {'suit': obj.suit, 'value': obj.value, 'numeric_value': obj.numeric_value}
+        return super().default(obj)
 
 # Defining BaccaratGame class inheriting from CasinoGame
 # Main entry
