@@ -26,10 +26,19 @@ CORNER_RADIUS = 20
 BUTTON_WIDTH = 100
 BUTTON_HEIGHT = 40
 
+# Asset paths
 ASSETS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets")
 SAVES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "saves")
 
-# colors, asset paths, and betting amounts
+# Create directories if they do not exist
+os.makedirs(ASSETS_DIR, exist_ok=True)
+os.makedirs(SAVES_DIR, exist_ok=True)
+
+# Save file paths
+SAVE_FILES = [os.path.join(SAVES_DIR, f"save{i}.json") for i in range(1, 4)]
+
+
+# colors, and betting amounts
 # Set up file directories for assets and data
 # GUI Setup 
 # Defining BaccaratGame class inheriting from CasinoGame
